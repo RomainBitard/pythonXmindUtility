@@ -4,8 +4,8 @@ import random
 import csv
 from typing import Set
 
-path = 'D:\\Bureau\\Drive\\Xmind'
-dataFilePath = 'D:\\Bureau\\Drive\\Xmind\\alreadyViewedFiles.csv'
+path = 'D:\\your\\path'
+dataFilePath = 'D:\\your\\path\\yourfile.csv'
 
 def writeValuesInFile(datas, mode):
      with open(dataFilePath, mode, newline='') as csvfile:
@@ -55,27 +55,30 @@ def selectRandomFilesList(datas):
         return random.sample(datas, len(datas))
     return random.sample(datas, 3)
 
+def openCards(cardsSelection):
+     for randomFile in toBeReviewedRandomSelection:    
+        os.startfile(randomFile)
+
         
 alreadyReviewedFiles = getAlreadyReviewedFiles()
 allFiles = getAllXmindFilesFromFolder()
 toBeReviewedFiles = filesWithoutReviewedFilesAlready(allFiles, alreadyReviewedFiles)
 toBeReviewedRandomSelection = selectRandomFilesList(toBeReviewedFiles)
 
+cardsLeft = str(len(allFiles))
+toBeReviewedAtRandomSelectionSize = len(toBeReviewedRandomSelection)
+if toBeReviewedAtRandomSelectionSize >= 3:
+     openCards(toBeReviewedRandomSelection)
+     addNewValuesInFile(toBeReviewedRandomSelection)
+     cardsLeft = str(len(allFiles.difference(alreadyReviewedFiles)) - len(toBeReviewedRandomSelection))
+if toBeReviewedAtRandomSelectionSize == 0:
+     resetAlreadyViewedFiles()
+elif toBeReviewedAtRandomSelectionSize <= 2:
+     resetAlreadyViewedFiles()
+     openCards(toBeReviewedRandomSelection)
 
-if len(toBeReviewedRandomSelection) == 0:
-    resetAlreadyViewedFiles()
-    print('il reste ' + str(len(allFiles)) + ' cartes a revoir')
-elif len(toBeReviewedRandomSelection) <= 2:
-    resetAlreadyViewedFiles()
-    for randomFile in toBeReviewedRandomSelection:    
-        os.startfile(randomFile)
-    print('il reste ' + str(len(allFiles)) + ' cartes a revoir')
-else:
-    for randomFile in toBeReviewedRandomSelection:
-        os.startfile(randomFile)
-    addNewValuesInFile(toBeReviewedRandomSelection)
-    print('il reste ' + str(len(allFiles.difference(alreadyReviewedFiles)) - len(toBeReviewedRandomSelection)) + ' cartes a revoir')
-
+print('il reste ' + cardsLeft + ' cartes a revoir')
+input("press enter to exit.")
 
 
 
